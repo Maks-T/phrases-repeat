@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteBase /api/
+
+# Перенаправление всех запросов, которые не являются существующими файлами или директориями, на index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
