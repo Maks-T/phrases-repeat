@@ -19,7 +19,14 @@ class Phrase
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $stmt->execute();
 
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $phrases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Декодирование строки JSON обратно в массив
+            foreach ($phrases as &$phrase) {
+                $phrase['translate'] = json_decode($phrase['translate'], true);
+            }
+
+            return $phrases;
         } catch (PDOException $e) {
             // Обработка ошибок базы данных
             return [];

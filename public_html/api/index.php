@@ -16,6 +16,9 @@ try {
     $request = json_decode(file_get_contents('php://input'), true) ?? [];
 
     $router->register('GET', 'phrase', PhraseController::class);
+    $router->register('POST', 'phrase', PhraseController::class);
+    $router->register('PUT', 'phrase', PhraseController::class);
+    $router->register('DELETE', 'phrase', PhraseController::class);
 
     $router->dispatch($requestUri, $requestMethod, $request);
 } catch (\Throwable $e) {
