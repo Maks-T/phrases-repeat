@@ -38,10 +38,15 @@ class Phrase
     {
         try {
             $db = Database::getInstance();
-            $stmt = $db->prepare('INSERT INTO phrases (user_id, phrase, translate) VALUES (:user_id, :phrase, :translate)');
+            $stmt = $db->prepare('INSERT INTO phrases (user_id, phrase, translate, tr, comment) VALUES (:user_id, :phrase, :translate, :tr, :comment)');
+
             $stmt->bindParam(':user_id', $data['user_id'], PDO::PARAM_INT);
             $stmt->bindParam(':phrase', $data['phrase'], PDO::PARAM_STR);
-            $stmt->bindParam(':translate', $data['translate'], PDO::PARAM_STR);
+            // Кодирование массива translate в JSON
+            $translateJson = json_encode($data['translate']);
+            $stmt->bindParam(':translate', $translateJson, PDO::PARAM_STR);
+            $stmt->bindParam(':tr', $data['tr'], PDO::PARAM_STR);
+            $stmt->bindParam(':comment', $data['comment'], PDO::PARAM_STR);
 
             if ($stmt->execute()) {
                 return self::getById((int)$db->lastInsertId());
@@ -59,10 +64,14 @@ class Phrase
     {
         try {
             $db = Database::getInstance();
-            $stmt = $db->prepare('UPDATE phrases SET phrase = :phrase, translate = :translate WHERE id = :id');
+            $stmt = $db->prepare('UPDATE phrases SET phrase = :phrase, translate = :translate, tr = :tr, comment = :comment WHERE id = :id');
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':phrase', $data['phrase'], PDO::PARAM_STR);
-            $stmt->bindParam(':translate', $data['translate'], PDO::PARAM_STR);
+            // Кодирование массива translate в JSON
+            $translateJson = json_encode($data['translate']);
+            $stmt->bindParam(':translate', $translateJson, PDO::PARAM_STR);
+            $stmt->bindParam(':tr', $data['tr'], PDO::PARAM_STR);
+            $stmt->bindParam(':comment', $data['comment'], PDO::PARAM_STR);
 
             if ($stmt->execute()) {
                 return self::getById($id);
@@ -100,6 +109,10 @@ class Phrase
             $stmt->execute();
 
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                // Декодирование строки JSON обратно в массив
+                $result['translate'] = json_decode($result['translate'], true);
+            }
             return $result ?: null;
         } catch (PDOException $e) {
             // Обработка ошибок базы данных

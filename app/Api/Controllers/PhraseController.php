@@ -37,11 +37,15 @@ class PhraseController extends BaseController
         $userId = (int) $request['user_id'];
         $phrase = $request['phrase'];
         $translate = json_encode($request['translate']);
+        $tr = $request['tr'];
+        $comment = $request['comment'];
 
         $newPhrase = Phrase::create([
             'user_id' => $userId,
             'phrase' => $phrase,
-            'translate' => $translate
+            'translate' => $translate,
+            'tr' => $tr,
+            'comment' => $comment,
         ]);
 
         if ($newPhrase) {

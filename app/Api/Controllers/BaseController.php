@@ -33,6 +33,11 @@ class BaseController
     // Метод для отправки успешного ответа 
     protected function sendSuccessResponse($data, $message = 'The data has been processed successfully', $status = 200): void
     {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+        header("Access-Control-Allow-Credentials: true");
+
         header("Content-Type: application/json");
         http_response_code($status);
         echo json_encode(['status' => 'success', 'message' => $message, 'data' => $data]);
@@ -41,6 +46,11 @@ class BaseController
     // Метод для отправки ошибки
     protected function sendErrorResponse($message, $status = 400): void
     {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+        header("Access-Control-Allow-Credentials: true");
+
         header("Content-Type: application/json");
         http_response_code($status);
         echo json_encode(['status' => 'error', 'message' => $message]);
